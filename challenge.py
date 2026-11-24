@@ -3,7 +3,7 @@ The server runs your SQL on its own copy of the data and tells you which questio
 import os, sys, json, requests
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "starter", "api"))
 from main import generate_sql
-BASE = os.environ.get("GBS_COURSE_API", "https://cvfine.com/api")  # set when the course server is live
+BASE = os.environ.get("GBS_COURSE_API", "https://cvfine-api-prod-f2ffafhcfvgtfmfb.centralus-01.azurewebsites.net/api")  # set when the course server is live
 TOKEN = os.environ["GBS_TOKEN"]  # shown in your cvfine.com project page
 H = {"Authorization": f"Bearer {TOKEN}"}
 qs = requests.get(f"{BASE}/v1/gbs/challenge", headers=H, timeout=30).json()["questions"]

@@ -11,7 +11,7 @@ if [ -z "$TOKEN" ]; then
   read -r TOKEN
 fi
 mkdir -p /tmp/gbs && cd /tmp/gbs && rm -rf kit kit.zip
-curl -fsS -H "Authorization: Bearer $TOKEN" https://cvfine.com/api/v1/gbs/kit -o kit.zip || { echo "Could not fetch the data. Check the token and try again."; exit 1; }
+curl -fsS -H "Authorization: Bearer $TOKEN" https://cvfine-api-prod-f2ffafhcfvgtfmfb.centralus-01.azurewebsites.net/api/v1/gbs/kit -o kit.zip || { echo "Could not fetch the data. Check the token and try again."; exit 1; }
 python3 -c "import zipfile;zipfile.ZipFile('kit.zip').extractall('kit')"
 D=$(find kit -type d -name data | head -1)
 cd - >/dev/null
