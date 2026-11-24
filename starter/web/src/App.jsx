@@ -1,13 +1,15 @@
 import { useState } from "react";
-const API = "http://localhost:8000";
 const EXAMPLES = ["What are total sales by region?", "Top 3 products by sales in each category", "What percentage of orders were returned?"];
 
 export default function App() {
   const [q, setQ] = useState(""); const [res, setRes] = useState(null); const [busy, setBusy] = useState(false);
   async function ask(text) {
     setBusy(true); setQ(text);
-    const r = await fetch(`${API}/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question: text }) });
-    setRes(await r.json()); setBusy(false);
+    try {
+      const r = await fetch("/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question: text }) });
+      setRes(await r.json());
+    } catch { setRes({ error: "Could not reach the API. Is it still running on port 8000?" }); }
+    setBusy(false);
   }
   return (
     <div style={{ maxWidth: 820, margin: "2rem auto", fontFamily: "system-ui" }}>
