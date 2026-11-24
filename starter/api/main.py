@@ -16,12 +16,17 @@ def schema_text() -> str:
         for t, col, typ in cur.fetchall(): out.setdefault(t, []).append(f"{col} {typ}")
     return "\n".join(f"{t}({', '.join(c)})" for t, c in out.items())
 
-# BASELINE prompt: schema only. It knows nothing about the business. That is on purpose.
-# TODO (M5): improve it with what YOU learned in M1-M2 (cleaning rules, definitions, fiscal year...).
-SYSTEM = "You write PostgreSQL SELECT queries. Return only SQL, no explanation.\nSchema:\n{schema}"
+# The AI's instructions: a short fixed intro plus YOUR business rules from Milestone 5.
+# This is your business context layer. Edit business_rules.md, save, and the API uses it on the next question.
+def business_rules() -> str:
+    path = os.path.join(os.path.dirname(__file__), "business_rules.md")
+    with open(path, encoding="utf-8") as f:
+        return f.read().strip()
+
+SYSTEM = "You write PostgreSQL SELECT queries. Return only SQL, no explanation.\nSchema:\n{schema}\n\nBusiness rules. Follow them:\n{rules}"
 
 def generate_sql(question: str) -> str:
-    sql = chat([{"role": "system", "content": SYSTEM.format(schema=schema_text())}, {"role": "user", "content": question}])
+    sql = chat([{"role": "system", "content": SYSTEM.format(schema=schema_text(), rules=business_rules())}, {"role": "user", "content": question}])
     return re.sub(r"^```(?:sql)?|```$", "", sql.strip(), flags=re.M).strip()
 
 def run_sql(sql: str, max_rows=500):
