@@ -14,7 +14,7 @@ st.title("Gift and Bliss Supplies - Sales Overview")
 # Example chart (raw data, NOT cleaned). Your job: apply the rules you found in M1-M2.
 raw = q("SELECT date_trunc('month', order_date)::date AS month, sum(sales) AS sales "
         "FROM orders JOIN order_items USING(order_id) GROUP BY 1 ORDER BY 1")
-st.plotly_chart(px.line(raw, x="month", y="sales", title="Monthly sales (INR) - uncleaned"), use_container_width=True)
+st.plotly_chart(px.line(raw, x="month", y="sales", title="Monthly sales (INR) - uncleaned"), width="stretch")
 
 # TODO 1: replace with cleaned numbers (exclude test and cancelled orders, merge South-2 into South)
 # TODO 2: add at least 3 charts with titles and units (category profit ratio, region vs target, returns)
